@@ -26,16 +26,18 @@ subprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 
     dependencies {
         compileOnly 'org.projectlombok:lombok:1.18.20'
         annotationProcessor 'org.projectlombok:lombok:1.18.20'
-
+        compileOnly "com.github.MilkBowl:VaultAPI:1.7"
         testCompileOnly 'org.projectlombok:lombok:1.18.20'
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
         testImplementation 'com.google.code.findbugs:jsr305:3.0.2'
         implementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
+        compileOnly 'net.luckperms:api:5.4'
     }
 
     compileJava.options.encoding = 'UTF-8'

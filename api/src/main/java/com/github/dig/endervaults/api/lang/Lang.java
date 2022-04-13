@@ -15,6 +15,7 @@ public enum Lang {
     BLACKLISTED_ITEM("blacklisted-item"),
     PLAYER_NOT_FOUND("player-not-found"),
     ONLY_FROM_CONSOLE("only-from-console");
+    //UNLOCK_VAULT("unlock-vault");
 
     @Getter
     private String key;

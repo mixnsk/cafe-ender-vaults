@@ -8,6 +8,8 @@ import com.github.dig.endervaults.api.vault.VaultPersister;
 import com.github.dig.endervaults.api.vault.metadata.VaultMetadataRegistry;
 import com.github.dig.endervaults.nms.MinecraftVersion;
 import com.github.dig.endervaults.api.vault.VaultRegistry;
+import net.milkbowl.vault.economy.Economy;
+
 
 public interface EnderVaultsPlugin {
 
@@ -28,4 +30,6 @@ public interface EnderVaultsPlugin {
     UserPermission getPermission();
 
     VaultMetadataRegistry getMetadataRegistry();
+
+    Economy getEconomy();
 }

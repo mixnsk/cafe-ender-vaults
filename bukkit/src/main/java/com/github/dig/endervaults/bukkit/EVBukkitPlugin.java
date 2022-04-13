@@ -11,9 +11,7 @@ import com.github.dig.endervaults.api.storage.Storage;
 import com.github.dig.endervaults.api.vault.VaultPersister;
 import com.github.dig.endervaults.api.vault.metadata.VaultDefaultMetadata;
 import com.github.dig.endervaults.api.vault.metadata.VaultMetadataRegistry;
-import com.github.dig.endervaults.bukkit.command.VaultAdminCommand;
-import com.github.dig.endervaults.bukkit.command.VaultMigrateCommand;
-import com.github.dig.endervaults.bukkit.command.VaultReloadCommand;
+import com.github.dig.endervaults.bukkit.command.*;
 import com.github.dig.endervaults.bukkit.permission.BukkitUserPermission;
 import com.github.dig.endervaults.bukkit.ui.icon.SelectIconListener;
 import com.github.dig.endervaults.bukkit.ui.selector.SelectorListener;
@@ -27,7 +25,6 @@ import com.github.dig.endervaults.bukkit.vault.metadata.StringMetadataConverter;
 import com.github.dig.endervaults.nms.InvalidMinecraftVersionException;
 import com.github.dig.endervaults.nms.MinecraftVersion;
 import com.github.dig.endervaults.api.vault.VaultRegistry;
-import com.github.dig.endervaults.bukkit.command.VaultCommand;
 import com.github.dig.endervaults.bukkit.file.BukkitDataFile;
 import com.github.dig.endervaults.bukkit.lang.BukkitLanguage;
 import com.github.dig.endervaults.bukkit.vault.BukkitVaultRegistry;
@@ -39,10 +36,13 @@ import com.github.dig.endervaults.nms.v1_17_R1.v1_17_R1NMS;
 import com.github.dig.endervaults.nms.v1_18_R1.*;
 import com.github.dig.endervaults.nms.v1_8_R3.v1_8_R3NMS;
 import lombok.extern.java.Log;
+import net.luckperms.api.LuckPerms;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -66,6 +66,7 @@ public class EVBukkitPlugin extends JavaPlugin implements EnderVaultsPlugin {
     private Metrics metrics;
 
     private BukkitTask autoSaveTask;
+    private static Economy econ = null;
 
     @Override
     @Nullable
@@ -119,6 +120,11 @@ public class EVBukkitPlugin extends JavaPlugin implements EnderVaultsPlugin {
     }
 
     @Override
+    public Economy getEconomy() {
+        return econ;
+    }
+
+    @Override
     public void onEnable() {
         showStartUpMessage();
         metrics = new Metrics(this, 12345);
@@ -127,6 +133,15 @@ public class EVBukkitPlugin extends JavaPlugin implements EnderVaultsPlugin {
         loadConfiguration();
         if (!setupDataStorage()) return;
 
+        if (!setupEconomy() ) {
+            log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+        if (provider != null) {
+            LuckPerms api = provider.getProvider();
+        }
         setupManagers();
         setupTasks();
 
@@ -148,6 +163,17 @@ public class EVBukkitPlugin extends JavaPlugin implements EnderVaultsPlugin {
         if (dataStorage != null) {
             dataStorage.close();
         }
+    }
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
     }
 
     private boolean setProviders() {
@@ -258,6 +284,8 @@ public class EVBukkitPlugin extends JavaPlugin implements EnderVaultsPlugin {
         getCommand("vaultreload").setExecutor(new VaultReloadCommand());
         getCommand("vaultadmin").setExecutor(new VaultAdminCommand());
         getCommand("vaultmigrate").setExecutor(new VaultMigrateCommand());
+        getCommand("vaultbuy").setExecutor(new VaultBuyCommand ());
+
     }
 
     private void registerMetadataConverters() {

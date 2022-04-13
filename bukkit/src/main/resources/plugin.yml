@@ -7,6 +7,8 @@ commands:
   vault:
     description: Manage vaults
     aliases: [vaults, ev, endervault, endervaults, pv, playervault, playervaults]
+  vaultbuy:
+    description: Buy vaults
   vaultreload:
     description: Reload endervault configuration files
     aliases: [pvreload, evreload]
