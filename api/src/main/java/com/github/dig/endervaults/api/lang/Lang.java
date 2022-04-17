@@ -14,8 +14,13 @@ public enum Lang {
     CONFIG_RELOAD("config-reload"),
     BLACKLISTED_ITEM("blacklisted-item"),
     PLAYER_NOT_FOUND("player-not-found"),
-    ONLY_FROM_CONSOLE("only-from-console");
-    //UNLOCK_VAULT("unlock-vault");
+    ONLY_FROM_CONSOLE("only-from-console"),
+    UNLOCK_VAULT("unlock-vault"),
+    NOT_NUMBER_ERROR("not-number-error"),
+    MUST_ENTER_NUMBER("must-enter-number"),
+    ALREADY_OWNED("already-owned"),
+    NOT_ENOUGH_MONEY("not-enough-money"),
+    MAX_NUMBER_OF_VAULT("max-number-of-vault");
 
     @Getter
     private String key;

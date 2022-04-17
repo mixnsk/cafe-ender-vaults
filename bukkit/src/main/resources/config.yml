@@ -11,6 +11,8 @@ enderchest:
   # Should we open the vault selector when
   # a player interacts with a enderchest?
   replace-with-selector: false
+  # Цена одной ячейки в валюте
+  price: 100000
 
 # Configuration for the selector
 selector:

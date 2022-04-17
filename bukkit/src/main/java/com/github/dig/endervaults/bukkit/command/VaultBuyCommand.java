@@ -22,6 +22,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -31,6 +32,8 @@ public class VaultBuyCommand implements CommandExecutor {
 
     private final EnderVaultsPlugin plugin = VaultPluginProvider.getPlugin ();
     private final Language language = plugin.getLanguage ();
+    FileConfiguration config = (FileConfiguration) plugin.getConfigFile().getConfiguration();
+
     //private final UserPermission<Player> permission = plugin.getPermission();
     LuckPerms api = LuckPermsProvider.get ();
 
@@ -56,18 +59,21 @@ public class VaultBuyCommand implements CommandExecutor {
             if (isNumeric (args[0])) {
                 User user = api.getPlayerAdapter (Player.class).getUser (player);
                 if (!hasPermission (user, "endervaults.vault." + args[0])) {
-                    if (plugin.getEconomy ().has (player, 100000)) {
-                        addPermission (user, "endervaults.vault." + args[0]);
-                        plugin.getEconomy ().withdrawPlayer (player, 100000);
-                        player.sendMessage (ChatColor.translateAlternateColorCodes ('&', language.get(Lang.NO_PERMISSION) + args[0]));
+                    if (plugin.getEconomy ().has (player, config.getInt ("enderchest.price"))) {
+                        if (!(Integer.parseInt (args[0]) > 54)) {
+                            addPermission (user, "endervaults.vault." + args[0]);
+                            plugin.getEconomy ().withdrawPlayer (player, config.getInt ("enderchest.price"));
+                            player.sendMessage (ChatColor.translateAlternateColorCodes ('&', language.get (Lang.UNLOCK_VAULT) + args[0]));
+                        } else
+                            player.sendMessage (ChatColor.translateAlternateColorCodes ('&', language.get (Lang.MAX_NUMBER_OF_VAULT)));
                     } else
-                        player.sendMessage (ChatColor.translateAlternateColorCodes ('&', "&a&lУ вас не хватает денег на ячейку"));
+                        player.sendMessage (ChatColor.translateAlternateColorCodes ('&', language.get (Lang.NOT_ENOUGH_MONEY)));
                 } else
-                    player.sendMessage (ChatColor.translateAlternateColorCodes ('&', "&a&lУ вас уже куплена ячейка"));
+                    player.sendMessage (ChatColor.translateAlternateColorCodes ('&', language.get (Lang.ALREADY_OWNED) + args[0]));
             } else
-                player.sendMessage (ChatColor.translateAlternateColorCodes ('&', "&a&lНомер ячейки задаётся числом"));
+                player.sendMessage (ChatColor.translateAlternateColorCodes ('&', language.get (Lang.NOT_NUMBER_ERROR)));
         } else
-            player.sendMessage (ChatColor.translateAlternateColorCodes ('&', "&a&lВведите номер ячейки для покупки"));
+            player.sendMessage (ChatColor.translateAlternateColorCodes ('&', language.get (Lang.MUST_ENTER_NUMBER)));
         return true;
     }
 
