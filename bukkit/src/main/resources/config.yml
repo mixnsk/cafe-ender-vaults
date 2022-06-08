@@ -12,7 +12,8 @@ enderchest:
   # a player interacts with a enderchest?
   replace-with-selector: false
   # Цена одной ячейки в валюте
-  price: 100000
+  price: 400000
+  max_number_to_buy: 18
 
 # Configuration for the selector
 selector:

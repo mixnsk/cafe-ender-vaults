@@ -60,7 +60,7 @@ public class VaultBuyCommand implements CommandExecutor {
                 User user = api.getPlayerAdapter (Player.class).getUser (player);
                 if (!hasPermission (user, "endervaults.vault." + args[0])) {
                     if (plugin.getEconomy ().has (player, config.getInt ("enderchest.price"))) {
-                        if (!(Integer.parseInt (args[0]) > 54)) {
+                        if (!(Integer.parseInt (args[0]) > config.getInt ("enderchest.max_number_to_buy"))) {
                             addPermission (user, "endervaults.vault." + args[0]);
                             plugin.getEconomy ().withdrawPlayer (player, config.getInt ("enderchest.price"));
                             player.sendMessage (ChatColor.translateAlternateColorCodes ('&', language.get (Lang.UNLOCK_VAULT) + args[0]));
