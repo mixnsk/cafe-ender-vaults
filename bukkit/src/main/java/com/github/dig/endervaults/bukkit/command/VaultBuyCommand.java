@@ -23,6 +23,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.Range;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -60,7 +61,8 @@ public class VaultBuyCommand implements CommandExecutor {
                 User user = api.getPlayerAdapter (Player.class).getUser (player);
                 if (!hasPermission (user, "endervaults.vault." + args[0])) {
                     if (plugin.getEconomy ().has (player, config.getInt ("enderchest.price"))) {
-                        if (!(Integer.parseInt (args[0]) > config.getInt ("enderchest.max_number_to_buy"))) {
+                        int index = Integer.parseInt (args[0]);
+                        if (index > 0 && index <= config.getInt ("enderchest.max_number_to_buy")) {
                             addPermission (user, "endervaults.vault." + args[0]);
                             plugin.getEconomy ().withdrawPlayer (player, config.getInt ("enderchest.price"));
                             player.sendMessage (ChatColor.translateAlternateColorCodes ('&', language.get (Lang.UNLOCK_VAULT) + args[0]));
