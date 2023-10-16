@@ -16,7 +16,7 @@ public class BukkitVaultAutoSave implements Runnable {
 
     @Override
     public void run() {
-        log.log(Level.INFO, "[EnderVaults] Starting auto save of all registered vaults.");
+        //log.log(Level.INFO, "[EnderVaults] Starting auto save of all registered vaults.");
 
         registry.getAllOwners().forEach(ownerUUID ->
             registry.get(ownerUUID).values().forEach(vault -> {
@@ -29,6 +29,6 @@ public class BukkitVaultAutoSave implements Runnable {
             })
         );
 
-        log.log(Level.INFO, "[EnderVaults] Successfully saved all registered vaults.");
+        //log.log(Level.INFO, "[EnderVaults] Successfully saved all registered vaults.");
     }
 }
